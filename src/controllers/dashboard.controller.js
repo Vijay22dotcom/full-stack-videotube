@@ -8,7 +8,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 
 const getChannelStats = asyncHandler(async (req, res) => {
-  // TODO: Get the channel stats like total video views, total subscribers, total videos, total likes etc.
+  // TODO: Get the channel stats like total video views, total subscribers, total videos, total likes etc. ✅
 
   const channelStats = await User.aggregate([
     { $match: { _id: new mongoose.Types.ObjectId(req.user._id) } },
