@@ -73,6 +73,14 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
     throw new ApiError(400, "playlistId and videoId both are required");
   }
 
+  const playlist = await Playlist.findById(playlistId);
+
+  await playlist?.videos?.forEach((id) => {
+    if (id.toString() === videoId) {
+      throw new ApiError(400, "this video already exist");
+    }
+  });
+
   const addVideo = await Playlist.findByIdAndUpdate(
     playlistId,
     {
@@ -98,6 +106,10 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
     { $pull: { videos: new mongoose.Types.ObjectId(videoId) } },
     { new: true }
   );
+
+  if (!playlist) {
+    throw new ApiError(404, "no video found in playList");
+  }
 
   return res
     .status(200)
