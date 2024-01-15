@@ -32,8 +32,12 @@ const createPlaylist = asyncHandler(async (req, res) => {
 const getUserPlaylists = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   //TODO: get user playlists ✅
+
   if (!userId) {
     throw new ApiError(400, "userId is required");
+  }
+  if (!isValidObjectId(userId)) {
+    throw new ApiError(400, "unvalid   userId   ");
   }
   const playlists = await Playlist.find({
     owner: new mongoose.Types.ObjectId(userId),
@@ -55,6 +59,10 @@ const getPlaylistById = asyncHandler(async (req, res) => {
     throw new ApiError(400, "PlaylistId is required");
   }
 
+  if (!isValidObjectId(playlistId)) {
+    throw new ApiError(400, "unvalid   playlistId   ");
+  }
+
   const playlist = await Playlist.findById(playlistId);
 
   if (!playlist) {
@@ -71,6 +79,10 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
 
   if (!playlistId || !videoId) {
     throw new ApiError(400, "playlistId and videoId both are required");
+  }
+
+  if (!isValidObjectId(playlistId) || !isValidObjectId(videoId)) {
+    throw new ApiError(400, "unvalid playlistId and videoId   ");
   }
 
   const playlist = await Playlist.findById(playlistId);
@@ -101,6 +113,10 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
   if (!playlistId || !videoId) {
     throw new ApiError(400, "playlistId and videoId both are required");
   }
+
+  if (!isValidObjectId(playlistId) || !isValidObjectId(videoId)) {
+    throw new ApiError(400, "unvalid playlistId and videoId   ");
+  }
   const playlist = await Playlist.findByIdAndUpdate(
     playlistId,
     { $pull: { videos: new mongoose.Types.ObjectId(videoId) } },
@@ -121,6 +137,9 @@ const deletePlaylist = asyncHandler(async (req, res) => {
   // TODO: delete playlist ✅
   if (!playlistId) {
     throw new ApiError(400, "PlaylistId required");
+  }
+  if (!isValidObjectId(playlistId)) {
+    throw new ApiError(400, "unvalid playlistId  ");
   }
 
   const deletedPlaylist = await Playlist.findByIdAndDelete(playlistId);
@@ -144,6 +163,9 @@ const updatePlaylist = asyncHandler(async (req, res) => {
 
   if (!playlistId) {
     throw new ApiError(400, "PlaylistId is required");
+  }
+  if (!isValidObjectId(playlistId)) {
+    throw new ApiError(400, "unvalid playlistId  ");
   }
 
   const playList = await Playlist.findByIdAndUpdate(

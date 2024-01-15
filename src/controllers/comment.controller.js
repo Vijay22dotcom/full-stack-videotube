@@ -83,6 +83,10 @@ const deleteComment = asyncHandler(async (req, res) => {
   // TODO: delete a comment✅
   const { commentId } = req.params;
 
+  if (!commentId) {
+    throw new ApiError(400, "commentId is requeired");
+  }
+
   const comment = await Comment.findByIdAndDelete(commentId);
 
   return res
