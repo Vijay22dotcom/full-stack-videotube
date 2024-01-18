@@ -87,7 +87,6 @@ const getChannelStats = asyncHandler(async (req, res) => {
         subscribersCount: 1,
         channelsSubscribedToCount: 1,
         totalVideo: 1,
-
         videos: 1,
       },
     },
