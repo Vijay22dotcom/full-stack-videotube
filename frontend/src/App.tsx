@@ -1,19 +1,15 @@
-import './App.css'
-import Header from './components/Header'
-import Sidemenu from './components/Sidemenu'
+import "./App.css";
+import Header from "./components/Header";
 
+import Home from "./page/Home";
 
 function App() {
-
   return (
     <>
-    <Header/>
-    
-    <Sidemenu/>
-    
-    
+      <Header />
+      <Home />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
