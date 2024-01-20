@@ -1,13 +1,12 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaSearch } from "react-icons/fa";
 import { RiMenu2Fill } from "react-icons/ri";
-import {  } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const Header = () => {
-  console.log(typeof FaSearch);
   return (
     <>
-      <div className="flex fixed w-full backdrop-blur-[10px]  h-[60px] justify-between px-[40px] py-[10px] border-b-[1px] border-b-gray-400 max-[500px]:hidden max-[700px]:px-[20px] ">
+      <div className="flex fixed w-full backdrop-blur-[10px]  h-[60px] justify-between px-[40px] py-[10px] border-b-[1px] border-b-gray-400 max-[500px]:hidden max-[700px]:px-[20px] z-50 ">
         <div className="logo  center-item ">LOGO</div>
         <div className="search relative  center-item ">
           <span className="absolute top-[12px] left-2 ">
@@ -23,14 +22,14 @@ const Header = () => {
           <span className="mx-[10px] cursor-pointer max-[700px]:mx-[5px] ">
             <BsThreeDotsVertical />
           </span>
-          <button className="mx-[10px]   max-[700px]:mx-[5px] font-semibold  hover:text-gray-400 ">
+          <Link to={"/login"} className="mx-[10px]   max-[700px]:mx-[5px] font-semibold  hover:text-gray-400 ">
             {/* <Link to={"/login"} > log in</Link>  */}
             log in
-          </button>
-          <button className="mx-[10px] max-[700px]:mx-[5px] button_bg_first text-black  font-semibold hover:text-white ">
+          </Link>
+          <Link to={"/register"} className="mx-[10px] max-[700px]:mx-[5px] button_bg_first text-black  font-semibold hover:text-white ">
             {/* <Link to={"/signin"} > sign up</Link> */}
             sign up
-          </button>
+          </Link>
         </div>
       </div>
 
