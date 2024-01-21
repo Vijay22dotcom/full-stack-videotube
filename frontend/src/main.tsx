@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import { Home, Login, Register } from "./page/index.ts";
 import store from "./store/store.ts";
+import { AlertProvider } from "./context/Alert.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,8 +25,10 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
+    <AlertProvider>
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
+    </AlertProvider>
   </React.StrictMode>
 );

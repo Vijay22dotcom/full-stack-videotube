@@ -8,11 +8,13 @@ import { IoEye , IoEyeOff} from "react-icons/io5";
 import { useAppDispatch } from "@/store/hook";
 import axios from "axios";
 import { userRegister } from "@/store/actions/authAction";
+import { useAlert } from "@/context/Alert";
 
 
 const Register = () => {
   const navigate = useNavigate();
   const dispatch=useAppDispatch()
+  const {showAlert}=useAlert()  
   const [showPass,setShowPass]=useState(false)
   const [avatarPreview ,setAvatarPreview]=useState<string | ArrayBuffer | null>("/user-avatar.webp")
   const [coverImagePreview ,setCoverImagePreview]=useState<string | ArrayBuffer | null>("/cover-image.jpg")
@@ -57,11 +59,32 @@ const Register = () => {
 
   const handlesubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-  
+   
+  if((user.email==="") || (user.fullName==="") || (user.password==="") || (user.username==="")){
+    console.log("k")
+    showAlert("All field are  requiard" ,"error")
+  }else{
+
     const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const data:any=await dispatch(userRegister(formData)).then((res)=>res?.payload)
+
+
+    if(data?.data?.success){
+        showAlert(data?.data?.message,"success")
+    }
+    
+
+
+  }
+
+  setUser({
+    username: "",
+    fullName:"",
+    email: "",
+    password: "",
+  })
   
 
-    const data=await dispatch(userRegister(formData))
 
   };
   return (

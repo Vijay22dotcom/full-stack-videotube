@@ -29,9 +29,9 @@ const genrateAccessAndRefreshToken = async (userId) => {
   }
 };
 
-const registerUSer = asyncHandler(async (req, res) => {
+const registerUSer = asyncHandler(async (req, res, next) => {
   const { fullName, email, username, password } = req.body;
-  console.log(req);
+  // console.log(req);
 
   if (
     [fullName, email, username, password].some((field) => field?.trim() === "")
@@ -44,7 +44,12 @@ const registerUSer = asyncHandler(async (req, res) => {
   });
 
   if (existesUSer) {
-    throw new ApiError(409, "User with email or username already exists");
+    // return res
+    //   .status(201)
+    //   .json(
+    //     new ApiResponse(400, {}, "User with email or username already exists")
+    //   );
+    throw new ApiError(400, "User with email or username already exists");
   }
 
   const avatarLocalPath = req.files?.avatar[0]?.path;
