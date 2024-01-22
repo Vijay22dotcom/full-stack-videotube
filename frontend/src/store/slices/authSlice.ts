@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { userLogin, userRegister } from "../actions/authAction";
-
+import type { TypedUseSelectorHook } from 'react-redux'
+import { RootState } from "../store";
 interface AuthState {
   isLoading: boolean;
   isError: boolean;
@@ -46,5 +47,7 @@ export const authSlice = createSlice({
 
   reducers: {},
 });
+
+  export const isLoading=(state:RootState)=>state.auth.isLoading
 
 export default authSlice.reducer;

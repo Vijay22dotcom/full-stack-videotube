@@ -5,16 +5,19 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import Sidemenu from "@/components/Sidemenu";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { IoEye , IoEyeOff} from "react-icons/io5";
-import { useAppDispatch } from "@/store/hook";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
 import axios from "axios";
 import { userRegister } from "@/store/actions/authAction";
 import { useAlert } from "@/context/Alert";
+import { isLoading } from "@/store/slices/authSlice";
+import { RootState } from "@/store/store";
 
 
 const Register = () => {
   const navigate = useNavigate();
   const dispatch=useAppDispatch()
   const {showAlert}=useAlert()  
+  const Loading:boolean=useAppSelector(isLoading)
   const [showPass,setShowPass]=useState(false)
   const [avatarPreview ,setAvatarPreview]=useState<string | ArrayBuffer | null>("/user-avatar.webp")
   const [coverImagePreview ,setCoverImagePreview]=useState<string | ArrayBuffer | null>("/cover-image.jpg")
@@ -25,6 +28,7 @@ const Register = () => {
     password: "",
   });
 
+  console.log(Loading)
   const handleAvatar=(e:ChangeEvent<HTMLInputElement>)=>{
       // console.log(e.target.files?.[0])
       const file = e.target.files?.[0];
@@ -68,21 +72,25 @@ const Register = () => {
     const formData = new FormData(e.currentTarget as HTMLFormElement);
     const data:any=await dispatch(userRegister(formData)).then((res)=>res?.payload)
 
+    console.log(data)
 
     if(data?.data?.success){
         showAlert(data?.data?.message,"success")
+        navigate("/")
+    }else{
+      showAlert(data?.data?.message,"error")
     }
     
 
 
   }
 
-  setUser({
-    username: "",
-    fullName:"",
-    email: "",
-    password: "",
-  })
+  // setUser({
+  //   username: "",
+  //   fullName:"",
+  //   email: "",
+  //   password: "",
+  // })
   
 
 
@@ -175,7 +183,7 @@ const Register = () => {
                 <div className="w-[300px] flex justify-between mt-[10px]">
                   <input
                     type="submit"
-                    // value={loading ? "loading..." : "register"}
+                    value={Loading ? "loading..." : "register"}
                     className="m-auto  text-l rounded-3xl   w-[50%] button_bg_first text-white  py-2 cursor-pointer transition-transform transform hover:scale-105  focus:outline-none  p-1"
                     // onClick={handlesubmit}
                   />

@@ -1,5 +1,5 @@
 import { User } from "../models/user.model.js";
-import { ApiError } from "../utils/apiError.js";
+import { ApiError, errorHandler } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import {
@@ -44,12 +44,15 @@ const registerUSer = asyncHandler(async (req, res, next) => {
   });
 
   if (existesUSer) {
-    // return res
-    //   .status(201)
-    //   .json(
-    //     new ApiResponse(400, {}, "User with email or username already exists")
-    //   );
-    throw new ApiError(400, "User with email or username already exists");
+    // throw new ApiError(400, "User with email or username already exists");
+    // return next(
+    //   errorHandler(400, "User with email or username already exists")
+    // );
+    return res
+      .status(400)
+      .json(
+        new ApiResponse(400, {}, "User with email or username already exists")
+      );
   }
 
   const avatarLocalPath = req.files?.avatar[0]?.path;
@@ -65,7 +68,10 @@ const registerUSer = asyncHandler(async (req, res, next) => {
   }
 
   if (!avatarLocalPath) {
-    throw new ApiError(400, "Avatar images is required");
+    return res
+      .status(400)
+      .json(new ApiResponse(400, {}, "Avatar images is required"));
+    // throw new ApiError(400, "Avatar images is required");
   }
 
   const avatar = await uploadOnClouldinary(avatarLocalPath);
@@ -73,7 +79,10 @@ const registerUSer = asyncHandler(async (req, res, next) => {
   const coverImage = await uploadOnClouldinary(coverImageLocalPath);
 
   if (!avatar) {
-    throw new ApiError(400, "Avatar images is required");
+    return res
+      .status(400)
+      .json(new ApiResponse(400, {}, "Avatar images is required"));
+    // throw new ApiError(400, "Avatar images is required");
   }
 
   const user = await User.create({
@@ -90,20 +99,41 @@ const registerUSer = asyncHandler(async (req, res, next) => {
   );
 
   if (!createdUser) {
-    throw new ApiError(500, "Something went wrong when user register");
+    return res
+      .status(400)
+      .json(
+        new ApiResponse(400, {}, "Something went wrong when user register")
+      );
+
+    // throw new ApiError(500, "Something went wrong when user register");
   }
 
+  const option = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  const { accessToken, refreshToken } = await genrateAccessAndRefreshToken(
+    user._id
+  );
+
   return res
+    .cookie("accessToken", accessToken, option)
+    .cookie("refreshToken", refreshToken, option)
     .status(201)
     .json(new ApiResponse(200, createdUser, "User register successfully"));
 });
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password, username } = req.body;
+  // console.log(req.body);
 
   // console.log(req.body);
 
   if (!username && !email) {
+    return res
+      .status(400)
+      .json(new ApiResponse(400, {}, "username or email is required"));
     throw new ApiError(400, "username or email is required");
   }
 
@@ -111,7 +141,11 @@ const loginUser = asyncHandler(async (req, res) => {
     $or: [{ username }, { email }],
   });
 
+  console.log(user);
   if (!user) {
+    return res
+      .status(400)
+      .json(new ApiResponse(400, {}, "User does not exist"));
     throw new ApiError(404, "User does not exist");
   }
 
@@ -119,6 +153,9 @@ const loginUser = asyncHandler(async (req, res) => {
   const isPasswordValid = await user.isPasswordCorrect(password);
 
   if (!isPasswordValid) {
+    return res
+      .status(400)
+      .json(new ApiResponse(400, {}, "Invalid user credentails "));
     throw new ApiError(401, "Invalid user credentails ");
   }
 
