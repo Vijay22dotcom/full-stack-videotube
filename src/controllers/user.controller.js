@@ -7,7 +7,7 @@ import {
   uploadOnClouldinary,
 } from "../utils/couldinarry.js";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
 
 const genrateAccessAndRefreshToken = async (userId) => {
   try {
@@ -215,6 +215,25 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User Logged Out Successfully"));
 });
 
+const getUserDetail = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  // console.log(userId);
+  if (!isValidObjectId(userId)) {
+    return res.status(400).json(new ApiResponse(400, {}, "unvalied userId"));
+    // throw new ApiError(400, "unvalied userId");
+  }
+
+  const user = await User.findById(userId).select("-password -refreshToken");
+
+  if (!user) {
+    return res.status(404).json(new ApiResponse(404, {}, "user not found"));
+    // throw new ApiError(400, "user not found");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "user deatils fetched successfully"));
+});
+
 const refereshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken =
     req.cookies.refreshToken || req.body.refreshToken;
@@ -293,9 +312,10 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
   // const user= await User.findById(req.user._id)
 
+  // console.log(req.user);
   return res
     .status(200)
-    .json(200, req.user, "Current user fetched successfully");
+    .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
 });
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
@@ -391,6 +411,9 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
   const { username } = req.params;
 
   if (!username?.trim()) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Username is missing"));
     throw new ApiError(400, "Username is missing");
   }
 
@@ -448,6 +471,9 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
   ]);
 
   if (!channel?.length) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "channel does not exists"));
     throw new ApiError(404, "channel does not exists");
   }
 
@@ -524,4 +550,5 @@ export {
   updateUserCoverImage,
   getUserChannelProfile,
   getWatchHistory,
+  getUserDetail,
 };

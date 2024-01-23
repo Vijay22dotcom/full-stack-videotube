@@ -77,6 +77,8 @@ const Register = () => {
     if(data?.data?.success){
         showAlert(data?.data?.message,"success")
         navigate("/")
+        localStorage.setItem("isLogged", JSON.stringify(true))   
+
     }else{
       showAlert(data?.data?.message,"error")
     }

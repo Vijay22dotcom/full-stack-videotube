@@ -6,12 +6,15 @@ import Sidemenu from "@/components/Sidemenu";
 import { useAlert } from "@/context/Alert";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { userLogin } from "@/store/actions/authAction";
+import { json } from "stream/consumers";
+
 
 
 const Login = () => {
   const navigate = useNavigate();
   const { showAlert } = useAlert();
   const dispatch = useAppDispatch();
+
   const [showPass, setShowPass] = useState(false);
   const [user, setUser] = useState({
     email: "",
@@ -41,6 +44,8 @@ const Login = () => {
       if (data?.data?.success) {
         showAlert(data?.data?.message, "success");
         navigate("/");
+        localStorage.setItem("isLogged", JSON.stringify(true))  
+        
       } else {
         showAlert(data?.data?.message, "error");
       }

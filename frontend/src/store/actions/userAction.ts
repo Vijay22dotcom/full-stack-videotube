@@ -63,3 +63,34 @@ export const fetchCurrentUser = createAsyncThunk(
     }
   );
   
+  export const fetchUserChannleProfile = createAsyncThunk(
+    "fetchUserChannlePRofile",
+    async (username:string) => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/v1/users/c/${username}`,
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        );
+  
+        return response;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          // console.log(error)
+          const axiosError = error as AxiosError;
+          console.log(error.response);
+          if (axiosError.response) {
+            // console.error(`Request failed with status code ${axiosError.response.status}`);
+  
+            return axiosError.response;
+          } else {
+            // Handle non-Axios errors if needed
+            console.error("Non-Axios error:", error);
+          }
+        }
+      }
+    }
+  );
+  
