@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchAllVideo } from "../actions/videoAction";
+import { RootState } from "../store";
 
 interface VideoState {
   isLoading: boolean;
@@ -34,5 +35,9 @@ export const videoSlice = createSlice({
 
   reducers: {},
 });
+
+
+export const getAllVideo=(state:RootState)=>state.video.videos
+export const isLoading=(state:RootState)=>state.video.isLoading
 
 export default videoSlice.reducer;
