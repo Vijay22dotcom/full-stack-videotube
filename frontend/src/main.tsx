@@ -9,7 +9,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import { Home, Login, Register } from "./page/index.ts";
+import { Home, Login, MyProfile, Register } from "./page/index.ts";
 import store from "./store/store.ts";
 import { AlertProvider } from "./context/Alert.tsx";
 
@@ -19,6 +19,7 @@ const router = createBrowserRouter(
       <Route path="" element={<Home />} />
       <Route path="/login" element={<Login  />} />
       <Route path="/register" element={<Register/>} />
+      <Route path="/profile" element={<MyProfile/>} />
     </Route>
   ) 
 );

@@ -1,33 +1,39 @@
 import OneVideo from "./OneVideo";
 import Video_Not_Found from "./Video_Not_Found";
 import { useEffect } from "react";
-import { useAppDispatch } from "@/store/hook";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { fetchAllVideo } from "@/store/actions/videoAction";
-
+import { getAllVideo, isLoading } from "@/store/slices/videoSlice";
 
 const AllVideoForHome = () => {
-
-  const dispatch=useAppDispatch()
+  const dispatch = useAppDispatch();
+  const { data } = useAppSelector(getAllVideo);
+  const videos: Video[] = data?.data;
+  const loading = useAppSelector(isLoading);
 
   useEffect(() => {
-    
-    dispatch(fetchAllVideo())
-  
-  }, [])
-  
-  return (
-    <div className="flex  flex-wrap  max-[500px]:pb-[60px]  ">
-      <OneVideo />
-      <OneVideo />
-      <OneVideo />
-      <OneVideo />
-      <OneVideo />
-    </div>
-    // <div  className="center-item  h-[80vh] " >
+    dispatch(fetchAllVideo()).then((res) => res.payload);
+  }, []);
 
-    // <Video_Not_Found    />
-    // </div>
- 
+  return !loading ? (
+    videos?.length <= 0 ? (
+      <div className="center-item  h-[80vh] ">
+        <Video_Not_Found />
+      </div>
+    ) : (
+      <div className="flex  flex-wrap  max-[500px]:pb-[60px]  ">
+        {videos?.map((video) => (
+          <OneVideo video={video} key={video._id} />
+        ))}
+
+        {/* <OneVideo />
+        <OneVideo />
+        <OneVideo />
+        <OneVideo /> */}
+      </div>
+    )
+  ) : (
+    <div>Loading...</div>
   );
 };
 

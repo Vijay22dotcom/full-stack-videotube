@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 import { RootState } from "../store";
-import { fetchCurrentUser, fetchUserDetailById } from "../actions/userAction";
+import { fetchCurrentUser, fetchUserChannleProfile, fetchUserDetailById } from "../actions/userAction";
 
 interface AuthState {
   isLoading: boolean;
@@ -15,7 +15,7 @@ const initialState: AuthState = {
   isLoading: false,
   isError: false,
   currentUser: {},
-  user:[]
+  user:{}
 };
 
 export const authSlice = createSlice({
@@ -48,6 +48,19 @@ export const authSlice = createSlice({
         console.log(action.payload);
         (state.isLoading = false), (state.isError = true);
       });
+
+      builder.addCase(fetchUserChannleProfile.pending, (state, action) => {
+        (state.isLoading = true), (state.user = {});
+      });
+  
+      builder.addCase(fetchUserChannleProfile.fulfilled, (state, action) => {
+        (state.isLoading = false), (state.user = action.payload?.data);
+      });
+  
+      builder.addCase(fetchUserChannleProfile.rejected, (state, action) => {
+        console.log(action.payload);
+        (state.isLoading = false), (state.isError = true);
+      });
    
   },
 
@@ -56,5 +69,6 @@ export const authSlice = createSlice({
 
   export const isLoading=(state:RootState)=>state.user.isLoading
   export const getCurrentUser=(state:RootState)=>state.user.currentUser
+  export const gethUserChannleProfile=(state:RootState)=>state.user.user
 
 export default authSlice.reducer;
