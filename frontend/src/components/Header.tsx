@@ -1,23 +1,28 @@
 import { fetchCurrentUser } from "@/store/actions/userAction";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { getCurrentUser } from "@/store/slices/userSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaSearch } from "react-icons/fa";
 import { RiMenu2Fill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-
+import Cookies from 'js-cookie';
+import { useLoginStatus } from "@/context/LoginStatus";
 const Header = () => {
   const dispatch = useAppDispatch();
   const data = useAppSelector(getCurrentUser);
   const user: User = data?.data;
   const storedValue: string | null = localStorage.getItem("isLogged");
-  const loginStatus: boolean =
-    storedValue !== null ? JSON.parse(storedValue) : false;
-  // console.log(typeof loginStatus);
+  const { isLoggedIn,  handleLogout } = useLoginStatus();
+  console.log(isLoggedIn)
+  const [loginStatus,setLoginStatus]=useState(false)
   useEffect(() => {
     dispatch(fetchCurrentUser());
+    // const isCookieAvailable = Cookies.get('accessToken') !== undefined
+    const isCookieAvailable = document.cookie.includes('userLoggedIn') || false
+    console.log(isCookieAvailable)
+    setLoginStatus(isCookieAvailable)
   }, []);
   return (
     <>
@@ -33,7 +38,7 @@ const Header = () => {
             className="border bg-black px-[30px] py-[2px] "
           />
         </div>
-        {loginStatus ? (
+        {isLoggedIn ? (
           <Link to={"/profile"} className="mr-[20px] z-1 cursor-pointer ">
             <Avatar>
               <AvatarImage src={user?.avatar} />

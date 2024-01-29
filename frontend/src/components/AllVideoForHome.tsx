@@ -10,13 +10,14 @@ const AllVideoForHome = () => {
   const { data } = useAppSelector(getAllVideo);
   const videos: Video[] = data?.data;
   const loading = useAppSelector(isLoading);
+  console.log( videos?.length <= 0 || videos)
 
   useEffect(() => {
     dispatch(fetchAllVideo()).then((res) => res.payload);
   }, []);
 
   return !loading ? (
-    videos?.length <= 0 ? (
+    videos?.length <= 0 || videos === undefined  ? (
       <div className="center-item  h-[80vh] ">
         <Video_Not_Found />
       </div>
