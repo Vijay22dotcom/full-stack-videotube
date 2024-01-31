@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import videoReducer from "./slices/videoSlice";
 import authReducer from "./slices/authSlice";
 import userReducer from "./slices/userSlice";
+import subscriptionReducer from "./slices/subscriptionSlice";
 
  const store = configureStore({
   middleware: (getDefaultMiddleware) =>
@@ -11,7 +12,8 @@ import userReducer from "./slices/userSlice";
   reducer: {
     video: videoReducer,
     auth:authReducer,
-    user:userReducer
+    user:userReducer,
+    subscription:subscriptionReducer
   },
 });
 

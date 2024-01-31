@@ -10,7 +10,7 @@ const AllVideoForHome = () => {
   const { data } = useAppSelector(getAllVideo);
   const videos: Video[] = data?.data;
   const loading = useAppSelector(isLoading);
-  console.log( videos?.length <= 0 || videos)
+  // console.log( videos?.length <= 0 || videos)
 
   useEffect(() => {
     dispatch(fetchAllVideo()).then((res) => res.payload);

@@ -13,6 +13,7 @@ import { Home, Login, MyProfile, Register } from "./page/index.ts";
 import store from "./store/store.ts";
 import { AlertProvider } from "./context/Alert.tsx";
 import { LoginStatusProvider } from "./context/LoginStatus.tsx";
+import ChannelPRofile from "./page/profile/ChannleProfile.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,7 +21,18 @@ const router = createBrowserRouter(
       <Route path="" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/profile" element={<MyProfile />} />
+      <Route path="/profile" element={<MyProfile />}>
+        <Route path="videos" element={<Register />} />
+        <Route path="playlist" element={<Register />} />
+        <Route path="tweets" element={<Register />} />
+        <Route path="following" element={<Register />} />
+      </Route>
+      <Route path="/:username" element={<ChannelPRofile />}>
+        <Route path="videos" element={<Register />} />
+        <Route path="playlist" element={<Register />} />
+        <Route path="tweets" element={<Register />} />
+        <Route path="following" element={<Register />} />
+      </Route>
     </Route>
   )
 );
